@@ -1,29 +1,36 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using UnityEngine;
 using UnityEditor;
-using NUnit.Framework;
 
-public class CreateFolders {
-  [MenuItem("Assets/Create Default Folders")]
-  private static void CreateAllFolders() {
-    List<string> folders = new List<string>();
-    folders.Add("Scripts");
-    folders.Add("Materials");
-    folders.Add("Textures");
-    folders.Add("Sprites");
-    folders.Add("Scenes");
-    folders.Add("Models");
-    folders.Add("Prefabs");
-    folders.Add("Sounds");
-    folders.Add("Music");
+public class CreateFolders
+{
+    [MenuItem("Assets/Create Default Folders")]
+    private static void CreateAllFolders()
+    {
+        // Replace this with your company or user name or leave empty to add folders to root
+        string CompanyName = "BlackDragonBE";
 
-    foreach (string folder in folders) {
-      if (!Directory.Exists("Assets/" + folder)) {
-        Directory.CreateDirectory("Assets/" + folder);
-      }
+        List<string> folders = new List<string>
+        {
+            "Scripts",
+            "Materials",
+            "Textures",
+            "Sprites",
+            "Scenes",
+            "Models",
+            "Prefabs",
+            "Sounds",
+            "Music"
+        };
+
+        foreach (string folder in folders)
+        {
+            if (!Directory.Exists("Assets/" + folder))
+            {
+                Directory.CreateDirectory("Assets/" + CompanyName + "/" + folder);
+            }
+        }
+
+        AssetDatabase.Refresh();
     }
-
-    AssetDatabase.Refresh();
-  }
 }
