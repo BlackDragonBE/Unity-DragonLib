@@ -11,6 +11,7 @@ public class SVGImport : AssetPostprocessor
 
     // This is called always when importing something
     private static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
+<<<<<<< HEAD
     {
         bool continueWithProcessing = importedAssets.Any(asset => asset.EndsWith(".svg", StringComparison.OrdinalIgnoreCase));
 
@@ -23,6 +24,8 @@ public class SVGImport : AssetPostprocessor
     }
 
     private static void ConvertSVGToPNG(string[] importedAssets)
+=======
+>>>>>>> 3b2832a5634ad955b6cc7d61966d4c51a1b522bc
     {
         //If the inkscape executable is not found:
         if (!File.Exists(InkscapePath))
