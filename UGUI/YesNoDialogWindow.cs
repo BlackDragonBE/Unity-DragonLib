@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 
 /// <summary>
@@ -9,9 +8,6 @@ using UnityEngine.UI;
 /// </summary>
 public class YesNoDialogWindow : MonoBehaviour
 {
-    //References
-
-    //Public
     public Button BtnYes;
     public Button BtnNo;
 
@@ -21,13 +17,7 @@ public class YesNoDialogWindow : MonoBehaviour
     private Action _onYesAction;
     private Action _onNoAction;
 
-    //Private
-
-    void Awake()
-    {
-    }
-
-    void Start()
+    private void Start()
     {
         BtnYes.onClick.AddListener(OnYes);
         BtnNo.onClick.AddListener(OnNo);
@@ -45,7 +35,6 @@ public class YesNoDialogWindow : MonoBehaviour
         BtnNo.transform.Find("Text").GetComponent<Text>().text = noText;
 
         gameObject.SetActive(true);
-
     }
 
     /// <summary>

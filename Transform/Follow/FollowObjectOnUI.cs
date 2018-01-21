@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 
 public class FollowObjectOnUI : MonoBehaviour
 {
@@ -19,6 +18,5 @@ public class FollowObjectOnUI : MonoBehaviour
         newPosition = GUICam.ViewportToWorldPoint(newPosition) + Offset;
 
         transform.position = new Vector3(newPosition.x, newPosition.y, 0);
-
     }
 }

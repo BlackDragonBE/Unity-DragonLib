@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using UnityEditor;
-using UnityEngine;
 
 public class SVGImport : AssetPostprocessor
 {
@@ -10,7 +10,19 @@ public class SVGImport : AssetPostprocessor
     public static string InkscapePath = @"C:\Program Files\Inkscape\inkscape.exe";
 
     // This is called always when importing something
-    static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
+    private static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
+    {
+        bool continueWithProcessing = importedAssets.Any(asset => asset.EndsWith(".svg", StringComparison.OrdinalIgnoreCase));
+
+        if (!continueWithProcessing)
+        {
+            return;
+        }
+
+        ConvertSVGToPNG(importedAssets);
+    }
+
+    private static void ConvertSVGToPNG(string[] importedAssets)
     {
         //If the inkscape executable is not found:
         if (!File.Exists(InkscapePath))
@@ -26,7 +38,8 @@ public class SVGImport : AssetPostprocessor
             }
             else
             {
-                UnityEngine.Debug.LogError("SVG To PNG Importer: Inkscape was not found.\nPlease point the InkscapePath string in SVGImport.cs to the inkscape executable or install Inkscape.");
+                UnityEngine.Debug.LogError(
+                    "SVG To PNG Importer: Inkscape was not found.\nPlease point the InkscapePath string in SVGImport.cs to the inkscape executable or install Inkscape.");
                 return;
             }
         }
@@ -36,7 +49,8 @@ public class SVGImport : AssetPostprocessor
             if (asset.EndsWith(".svg", StringComparison.OrdinalIgnoreCase))
             {
                 var process = Process.Start(InkscapePath,
-                    '"' + Path.GetFullPath(asset) + '"' + " --export-png=" + '"' + Path.GetFullPath(asset).Replace("svg", "png") + '"');
+                    '"' + Path.GetFullPath(asset) + '"' + " --export-png=" + '"' +
+                    Path.GetFullPath(asset).Replace("svg", "png") + '"');
 
                 if (process != null)
                     process.WaitForExit();

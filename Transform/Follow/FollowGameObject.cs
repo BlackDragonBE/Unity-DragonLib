@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 
 /// <summary>
 /// Follows a gameObject around in the chosen axis

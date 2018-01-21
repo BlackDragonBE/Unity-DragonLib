@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 
 public class LookAt : MonoBehaviour
 {
@@ -34,10 +33,6 @@ public class LookAt : MonoBehaviour
             rotation = Quaternion.Euler(originalRotation);
         }
 
-        
-
         transform.rotation = rotation;
-
-
     }
 }

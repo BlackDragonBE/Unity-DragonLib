@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 
 public class ScrollingTexture : MonoBehaviour
 {
@@ -9,10 +8,9 @@ public class ScrollingTexture : MonoBehaviour
     public float XScroll = 1f;
     public float YScroll = 1f;
 
-    void Update()
+    private void Update()
     {
         offset += (Time.deltaTime * scrollSpeed) / 10.0f;
         GetComponent<Renderer>().material.SetTextureOffset("_MainTex", new Vector2(offset * XScroll, offset * YScroll));
-
     }
 }

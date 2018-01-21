@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 
 public class RestrictRotation : MonoBehaviour
 {
@@ -8,7 +7,7 @@ public class RestrictRotation : MonoBehaviour
 
     public void Awake()
     {
-        _transform = transform; //Cache transform
+        _transform = transform;
         _startRotation = transform.rotation;
     }
 

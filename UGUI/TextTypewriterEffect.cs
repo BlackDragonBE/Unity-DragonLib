@@ -1,30 +1,25 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Text))]
 public class TextTypewriterEffect : MonoBehaviour
 {
-    //References
-
-    //Public
     public float TimeBetweenLetters = 0.05f;
     public bool StartTypingOnStart = false;
 
     [Header("Optional")]
     public AudioClip SoundOnEachType;
 
-    //Private
     private Text _text;
 
-    void Awake()
+    private void Awake()
     {
         _text = GetComponent<Text>();
     }
 
-    void Start()
+    private void Start()
     {
-
         if (StartTypingOnStart)
         {
             StartTypeWriter();
@@ -48,7 +43,7 @@ public class TextTypewriterEffect : MonoBehaviour
 
             if (SoundOnEachType)
             {
-                AudioSource.PlayClipAtPoint(SoundOnEachType,transform.position);
+                AudioSource.PlayClipAtPoint(SoundOnEachType, transform.position);
             }
 
             yield return new WaitForSeconds(TimeBetweenLetters);
