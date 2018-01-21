@@ -1,6 +1,7 @@
-﻿using UnityEditor;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
+using UnityEditor;
+using UnityEngine;
 
 /*
 This script will automatically make a Windows, Mac and Linux build in any folder you choose.
@@ -20,19 +21,27 @@ public class MultiBuild
         string path = EditorUtility.SaveFolderPanel("Choose Builds Folder", "", "");
 
         //PARAMETERS START
-        string gameName = "Dyna Bros"; //Name of your game
-        string[] levels = new string[] { "Assets/Scenes/Title.unity", "Assets/Scenes/Game.unity" }; //Scenes in order of loading
+        string gameName = Application.productName; //Name of your game, product name by default
+
+        //Scene paths
+        string[] scenes = new string[EditorBuildSettings.scenes.Length];
+
+        for (var i = 0; i < EditorBuildSettings.scenes.Length; i++)
+        {
+            scenes[i] = EditorBuildSettings.scenes[i].path;
+        }
+
         bool zipFolders = true; //Use 7zip to compress the created folders
         //PARAMETERS END
 
         // Build Win
-        BuildPipeline.BuildPlayer(levels, path + "/Win/" + gameName + ".exe", BuildTarget.StandaloneWindows, BuildOptions.None);
+        BuildPipeline.BuildPlayer(scenes, path + "/Win/" + gameName + ".exe", BuildTarget.StandaloneWindows, BuildOptions.None);
 
         // Build Mac
-        BuildPipeline.BuildPlayer(levels, path + "/Mac/" + gameName + ".app", BuildTarget.StandaloneOSXUniversal, BuildOptions.None);
+        BuildPipeline.BuildPlayer(scenes, path + "/Mac/" + gameName + ".app", BuildTarget.StandaloneOSX, BuildOptions.None);
 
         // Build Linux
-        BuildPipeline.BuildPlayer(levels, path + "/Linux/" + gameName + ".x86", BuildTarget.StandaloneLinuxUniversal, BuildOptions.None);
+        BuildPipeline.BuildPlayer(scenes, path + "/Linux/" + gameName + ".x86", BuildTarget.StandaloneLinuxUniversal, BuildOptions.None);
 
         // 7zip
         if (zipFolders && File.Exists(@"C:\Program Files\7-Zip\7z.exe"))
@@ -41,11 +50,9 @@ public class MultiBuild
             ZipFolder(path + "/Mac/", gameName + " Mac.zip");
             ZipFolder(path + "/Linux/", gameName + " Linux.zip");
         }
-
-
     }
 
-    static void ZipFolder(string folderPath, string zipName)
+    private static void ZipFolder(string folderPath, string zipName)
     {
         Process proc = new Process();
         proc.StartInfo.FileName = @"C:\Program Files\7-Zip\7z.exe";

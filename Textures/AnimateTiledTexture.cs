@@ -1,7 +1,7 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 
-class AnimateTiledTexture : MonoBehaviour
+public class AnimateTiledTexture : MonoBehaviour
 {
     public int columns = 2;
     public int rows = 2;
@@ -10,7 +10,7 @@ class AnimateTiledTexture : MonoBehaviour
     //the current frame to display
     private int index = 0;
 
-    void Start()
+    private void Start()
     {
         StartCoroutine(updateTiling());
 
@@ -36,6 +36,5 @@ class AnimateTiledTexture : MonoBehaviour
 
             yield return new WaitForSeconds(1f / framesPerSecond);
         }
-
     }
 }

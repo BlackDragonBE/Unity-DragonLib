@@ -1,9 +1,8 @@
 using UnityEngine;
-using System.Collections;
 
 public class RotateAroundAxis : MonoBehaviour
 {
-    public float RotationSpeed = 10.0f; //Speed to rotate with
+    public float RotationSpeed = 10.0f;
     public bool TurnOnX;
     public bool TurnOnY;
     public bool TurnOnZ;
@@ -11,7 +10,7 @@ public class RotateAroundAxis : MonoBehaviour
     public bool TurnOnLocalY;
     public bool TurnOnLocalZ;
 
-    void Update()
+    private void Update()
     {
         if (TurnOnX)
         {

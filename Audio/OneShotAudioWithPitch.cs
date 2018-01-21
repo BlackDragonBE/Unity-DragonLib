@@ -7,8 +7,7 @@ public class OneShotAudioWithPitch : MonoBehaviour
     public AudioClip Clip;
     public float Pitch;
 
-    //Setup of things that depend on other components
-    void Start()
+    private void Start()
     {
         if (Clip)
         {
@@ -19,7 +18,7 @@ public class OneShotAudioWithPitch : MonoBehaviour
         }
     }
 
-    void Update()
+    private void Update()
     {
         if (!GetComponent<AudioSource>().isPlaying)
         {

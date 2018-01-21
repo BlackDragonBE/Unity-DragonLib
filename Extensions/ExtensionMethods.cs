@@ -117,7 +117,7 @@ public static class ExtensionMethods
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="color"></param>
     /// <param name="alpha"></param>

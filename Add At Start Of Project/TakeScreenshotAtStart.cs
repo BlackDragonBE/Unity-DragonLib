@@ -6,19 +6,14 @@ using Random = UnityEngine.Random;
 
 public class TakeScreenshotAtStart : MonoBehaviour
 {
-    //References
-
-    //Public
     public float MinDelayBeforeScreenshot = 1f;
     public float MaxDelayBeforeScreenshot = 1f;
 
-    //Private
-
-    void Start()
+    private void Start()
     {
-        if (!Directory.Exists("screenshots"))
+        if (!Directory.Exists("Screenshots"))
         {
-            Directory.CreateDirectory("screenshots");
+            Directory.CreateDirectory("Screenshots");
         }
 
         StartCoroutine(TakeScreenshot());
@@ -26,8 +21,7 @@ public class TakeScreenshotAtStart : MonoBehaviour
 
     private IEnumerator TakeScreenshot()
     {
-        yield return new WaitForSeconds(Random.Range(MinDelayBeforeScreenshot,MaxDelayBeforeScreenshot));
-        ScreenCapture.CaptureScreenshot("screenshots/" + "screenshot" + DateTime.Now.ToString("yyMMdd") + ".png");
-        //Debug.Log("Screenshot made");
+        yield return new WaitForSeconds(Random.Range(MinDelayBeforeScreenshot, MaxDelayBeforeScreenshot));
+        ScreenCapture.CaptureScreenshot("Screenshots/" + "screenshot" + DateTime.Now.ToString("yyMMdd") + ".png");
     }
 }
