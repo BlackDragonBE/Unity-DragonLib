@@ -16,9 +16,18 @@ Here's a quick overview of the scripts.
 
 ## Camera  
 
+**CameraBackgroundColorChanger.cs**: Transitions the camera background color between 2 chosen colors. 
+**VisibleOrNot.cs**: Invoke an event/UnityEvent when the GameObject this is attached to is visible to the camera. Only triggers if the object is actually visible and not fully blocked by other objects (with colliders) by using linecasts.
+
 ## Editor  
 
+**CreateFolders.cs**: This adds a menu to the editor under "Assets/Create Default Folders" that creates a bunch of asset folders luke "Scripts", "Materials", etc.  
+**DeleteMyPlayerPrefs.cs**: Adds a menu to the editor under "Tools/DeleteMyPlayerPrefs" that deletes all player prefs for testing purposes.  
+**MoveWithArrowKeys.cs**: Add to a GameObject in the scene to be able to move any selected GameObject using the arrow keys.
+
 ## Extensions  
+
+**ExtensionMethods.cs**: A bunch of handy extension methods for strings, Vector3, Color, etc. Take a look at the script to see what's included.
 
 ## GameObject State  
 
