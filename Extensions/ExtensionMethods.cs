@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
@@ -9,6 +8,8 @@ using UnityEngine;
 /// </summary>
 public static class ExtensionMethods
 {
+    #region Transform
+
     /// <summary>
     /// Copies the position and rotation of another transform
     /// </summary>
@@ -40,6 +41,62 @@ public static class ExtensionMethods
     {
         return parent.GetComponentsInChildren<Transform>().Where(t => t != parent && t.tag == tag).ToArray();
     }
+
+    public static List<GameObject> GetAllChildren(this Transform transform)
+    {
+        List<GameObject> children = new List<GameObject>();
+
+        foreach (Transform child in transform.transform)
+        {
+            children.Add(child.gameObject);
+        }
+        return children;
+    }
+
+    public static void DestroyAllChildren(this Transform transform)
+    {
+        if (transform == null)
+        {
+            return;
+        }
+
+        var children = new List<GameObject>();
+
+        foreach (Transform child in transform)
+        {
+            children.Add(child.gameObject);
+        }
+
+        children.ForEach(child => GameObject.Destroy(child));
+    }
+
+    public static void SetX(this Transform transform, float x)
+    {
+        Vector3 newPosition =
+            new Vector3(x, transform.position.y, transform.position.z);
+
+        transform.position = newPosition;
+    }
+
+    public static void SetY(this Transform transform, float y)
+    {
+        Vector3 newPosition =
+            new Vector3(transform.position.x, y, transform.position.z);
+
+        transform.position = newPosition;
+    }
+
+    public static void SetZ(this Transform transform, float z)
+    {
+        Vector3 newPosition =
+            new Vector3(transform.position.x, transform.position.y, z);
+
+        transform.position = newPosition;
+    }
+
+    #endregion Transform
+
+    #region GameObject
 
     /// <summary>
     /// Gets all components in the children with a certain tag
@@ -116,6 +173,10 @@ public static class ExtensionMethods
             renderer.enabled = tf;
     }
 
+    #endregion GameObject
+
+    #region Color
+
     /// <summary>
     ///
     /// </summary>
@@ -127,57 +188,9 @@ public static class ExtensionMethods
         return new Color(color.r, color.g, color.b, alpha);
     }
 
-    public static List<GameObject> GetAllChildren(this Transform transform)
-    {
-        List<GameObject> children = new List<GameObject>();
+    #endregion Color
 
-        foreach (Transform child in transform.transform)
-        {
-            children.Add(child.gameObject);
-        }
-        return children;
-    }
-
-    public static void DestroyAllChildren(this Transform transform)
-    {
-        if (transform == null)
-        {
-            return;
-        }
-
-        var children = new List<GameObject>();
-
-        foreach (Transform child in transform)
-        {
-            children.Add(child.gameObject);
-        }
-
-        children.ForEach(child => GameObject.Destroy(child));
-    }
-
-    public static void SetX(this Transform transform, float x)
-    {
-        Vector3 newPosition =
-           new Vector3(x, transform.position.y, transform.position.z);
-
-        transform.position = newPosition;
-    }
-
-    public static void SetY(this Transform transform, float y)
-    {
-        Vector3 newPosition =
-           new Vector3(transform.position.x, y, transform.position.z);
-
-        transform.position = newPosition;
-    }
-
-    public static void SetZ(this Transform transform, float z)
-    {
-        Vector3 newPosition =
-           new Vector3(transform.position.x, transform.position.y, z);
-
-        transform.position = newPosition;
-    }
+    #region String
 
     public static bool IsAlphaNum(this string str)
     {
@@ -194,6 +207,29 @@ public static class ExtensionMethods
     }
 
     /// <summary>
+    /// Creates a performance friendly string using StringBuilder
+    /// </summary>
+    /// <param name="str"></param>
+    /// <param name="stringParams"></param>
+    /// <returns></returns>
+    public static string Build(this string str, params string[] stringParams)
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.Append(str);
+
+        for (int i = 0; i < stringParams.Length; i++)
+        {
+            builder.Append(stringParams[i]);
+        }
+
+        return builder.ToString();
+    }
+
+    #endregion String
+
+    #region int
+
+    /// <summary>
     /// Formats an int to a string with thousands seperated eg 21000 becoms 21,000
     /// </summary>
     /// <param name="num"></param>
@@ -202,6 +238,10 @@ public static class ExtensionMethods
     {
         return string.Format("{0:n0}", num);
     }
+
+    #endregion int
+
+    #region float
 
     /// <summary>
     /// Formats an float to a string with thousands seperated eg 21000 becoms 21,000
@@ -213,6 +253,10 @@ public static class ExtensionMethods
         return string.Format("{0:n0}", num);
     }
 
+    #endregion float
+
+    #region double
+
     /// <summary>
     /// Formats an float to a string with thousands seperated eg 21000 becoms 21,000
     /// </summary>
@@ -223,9 +267,15 @@ public static class ExtensionMethods
         return string.Format("{0:n0}", num);
     }
 
+    #endregion double
+
+    #region RectTransform
+
     public static Rect RectTransformToScreenSpace(this RectTransform transform)
     {
         Vector2 size = Vector2.Scale(transform.rect.size, transform.lossyScale);
         return new Rect((Vector2)transform.position - (size * 0.5f), size);
     }
+
+    #endregion RectTransform
 }
