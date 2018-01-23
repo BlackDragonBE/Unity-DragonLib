@@ -67,31 +67,22 @@ public static class ExtensionMethods
             children.Add(child.gameObject);
         }
 
-        children.ForEach(child => GameObject.Destroy(child));
+        children.ForEach(child => Object.Destroy(child));
     }
 
     public static void SetX(this Transform transform, float x)
     {
-        Vector3 newPosition =
-            new Vector3(x, transform.position.y, transform.position.z);
-
-        transform.position = newPosition;
+        transform.position = new Vector3(x, transform.position.y, transform.position.z);
     }
 
     public static void SetY(this Transform transform, float y)
     {
-        Vector3 newPosition =
-            new Vector3(transform.position.x, y, transform.position.z);
-
-        transform.position = newPosition;
+        transform.position = new Vector3(transform.position.x, y, transform.position.z);
     }
 
     public static void SetZ(this Transform transform, float z)
     {
-        Vector3 newPosition =
-            new Vector3(transform.position.x, transform.position.y, z);
-
-        transform.position = newPosition;
+        transform.position = new Vector3(transform.position.x, transform.position.y, z);
     }
 
     #endregion Transform
@@ -178,7 +169,7 @@ public static class ExtensionMethods
     #region Color
 
     /// <summary>
-    ///
+    /// Get a color with a specified alpha value
     /// </summary>
     /// <param name="color"></param>
     /// <param name="alpha"></param>
@@ -192,6 +183,11 @@ public static class ExtensionMethods
 
     #region String
 
+    /// <summary>
+    /// True if string is alphanumeric
+    /// </summary>
+    /// <param name="str"></param>
+    /// <returns></returns>
     public static bool IsAlphaNum(this string str)
     {
         if (string.IsNullOrEmpty(str))
