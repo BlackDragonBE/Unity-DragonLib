@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using System.Collections;
 using UnityEngine.Events;
 
 /// <summary>
@@ -10,7 +9,7 @@ using UnityEngine.Events;
 /// </summary>
 public class VisibleOrNot : MonoBehaviour
 {
-    public static event Action<bool, Vector3> OnVisibilityChanged;
+    public event Action<bool, Vector3> OnVisibilityChanged;
 
     [Serializable]
     public class VisibilityChangedEvent : UnityEvent<bool, Vector3> { }
