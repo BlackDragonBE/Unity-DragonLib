@@ -103,10 +103,7 @@ public class VisibleOrNot : MonoBehaviour
 
     private void TriggerVisibilityChangedEvent()
     {
-        if (OnVisibilityChanged != null)
-        {
-            OnVisibilityChanged(IsVisible, transform.position);
-            OnVisibilityChangedEvent.Invoke(IsVisible, transform.position);
-        }
+        OnVisibilityChanged.InvokeSafely(IsVisible, transform.position);
+        OnVisibilityChangedEvent.Invoke(IsVisible, transform.position);
     }
 }

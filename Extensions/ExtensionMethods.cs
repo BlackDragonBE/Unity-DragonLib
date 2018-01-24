@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 /// <summary>
 /// Contains all of Dragonlib extension methods
@@ -11,7 +13,7 @@ public static class ExtensionMethods
     #region Transform
 
     /// <summary>
-    /// Copies the position and rotation of another transform
+    /// Copies the position and rotation of another transform.
     /// </summary>
     /// <param name="transformToCopy">transform to copy values from</param>
     public static void CopyPositionAndRotation(this Transform tr, Transform transformToCopy)
@@ -42,6 +44,9 @@ public static class ExtensionMethods
         return parent.GetComponentsInChildren<Transform>().Where(t => t != parent && t.tag == tag).ToArray();
     }
 
+    /// <summary>
+    /// Returns all child GameObjects of this Transform.
+    /// </summary>
     public static List<GameObject> GetAllChildren(this Transform transform)
     {
         List<GameObject> children = new List<GameObject>();
@@ -53,6 +58,9 @@ public static class ExtensionMethods
         return children;
     }
 
+    /// <summary>
+    /// Destroy all children of this Transform.
+    /// </summary>
     public static void DestroyAllChildren(this Transform transform)
     {
         if (transform == null)
@@ -70,19 +78,22 @@ public static class ExtensionMethods
         children.ForEach(child => Object.Destroy(child));
     }
 
-    public static void SetX(this Transform transform, float x)
+    public static Transform SetX(this Transform transform, float x)
     {
         transform.position = new Vector3(x, transform.position.y, transform.position.z);
+        return transform;
     }
 
-    public static void SetY(this Transform transform, float y)
+    public static Transform SetY(this Transform transform, float y)
     {
         transform.position = new Vector3(transform.position.x, y, transform.position.z);
+        return transform;
     }
 
-    public static void SetZ(this Transform transform, float z)
+    public static Transform SetZ(this Transform transform, float z)
     {
         transform.position = new Vector3(transform.position.x, transform.position.y, z);
+        return transform;
     }
 
     #endregion Transform
@@ -90,12 +101,8 @@ public static class ExtensionMethods
     #region GameObject
 
     /// <summary>
-    /// Gets all components in the children with a certain tag
+    /// Returns all components in this GameObject's children with a certain tag.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="gameObject"></param>
-    /// <param name="tag"></param>
-    /// <returns></returns>
     public static T[] GetComponentsInChildrenWithTag<T>(this GameObject gameObject, string tag)
     where T : Component
     {
@@ -111,11 +118,8 @@ public static class ExtensionMethods
     }
 
     /// <summary>
-    /// Gets the components in the parents of the gameobject
+    /// Returns the components in the parents of the gameobject.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="gameObject"></param>
-    /// <returns></returns>
     public static T GetComponentInParents<T>(this GameObject gameObject)
     where T : Component
     {
@@ -130,7 +134,9 @@ public static class ExtensionMethods
         return null;
     }
 
-    // Set the layer of this GameObject and all of its children.
+    /// <summary>
+    /// Set the layer of this GameObject and all of its children.
+    /// </summary>
     public static void SetLayerRecursively(this GameObject gameObject, int layer)
     {
         gameObject.layer = layer;
@@ -139,29 +145,25 @@ public static class ExtensionMethods
     }
 
     /// <summary>
-    /// Enables or disables all colliders on an object and its children
+    /// Enables or disables all colliders on an object and its children.
     /// </summary>
-    /// <param name="gameObject"></param>
-    /// <param name="tf"></param>
-    public static void SetCollisionRecursively(this GameObject gameObject, bool tf)
+    public static void SetCollisionRecursively(this GameObject gameObject, bool enable)
     {
         Collider[] colliders = gameObject.GetComponentsInChildren<Collider>();
 
         foreach (Collider collider in colliders)
-            collider.enabled = tf;
+            collider.enabled = enable;
     }
 
     /// <summary>
-    /// Enables or disables all renderers on an object and its children
+    /// Enables or disables all renderers on an object and its children.
     /// </summary>
-    /// <param name="gameObject"></param>
-    /// <param name="tf"></param>
-    public static void SetVisualRecursively(this GameObject gameObject, bool tf)
+    public static void SetVisualRecursively(this GameObject gameObject, bool enable)
     {
         Renderer[] renderers = gameObject.GetComponentsInChildren<Renderer>();
 
         foreach (Renderer renderer in renderers)
-            renderer.enabled = tf;
+            renderer.enabled = enable;
     }
 
     #endregion GameObject
@@ -169,11 +171,8 @@ public static class ExtensionMethods
     #region Color
 
     /// <summary>
-    /// Get a color with a specified alpha value
+    /// Returns a color with a specified alpha value.
     /// </summary>
-    /// <param name="color"></param>
-    /// <param name="alpha"></param>
-    /// <returns>A color with the defined alpha</returns>
     public static Color WithAlpha(this Color color, float alpha)
     {
         return new Color(color.r, color.g, color.b, alpha);
@@ -184,10 +183,8 @@ public static class ExtensionMethods
     #region String
 
     /// <summary>
-    /// True if string is alphanumeric
+    /// Returns true if string is alphanumeric.
     /// </summary>
-    /// <param name="str"></param>
-    /// <returns></returns>
     public static bool IsAlphaNum(this string str)
     {
         if (string.IsNullOrEmpty(str))
@@ -203,11 +200,8 @@ public static class ExtensionMethods
     }
 
     /// <summary>
-    /// Creates a performance friendly string using StringBuilder
+    /// Creates a performance friendly string using StringBuilder.
     /// </summary>
-    /// <param name="str"></param>
-    /// <param name="stringParams"></param>
-    /// <returns></returns>
     public static string Build(this string str, params string[] stringParams)
     {
         StringBuilder builder = new StringBuilder();
@@ -226,10 +220,8 @@ public static class ExtensionMethods
     #region int
 
     /// <summary>
-    /// Formats an int to a string with thousands seperated eg 21000 becoms 21,000
+    /// Formats an int to a string with thousands seperated eg 21000 becoms 21,000.
     /// </summary>
-    /// <param name="num"></param>
-    /// <returns></returns>
     public static string ThousandsSeperated(this int num)
     {
         return string.Format("{0:n0}", num);
@@ -240,10 +232,8 @@ public static class ExtensionMethods
     #region float
 
     /// <summary>
-    /// Formats an float to a string with thousands seperated eg 21000 becoms 21,000
+    /// Formats an float to a string with thousands seperated eg 21000 becoms 21,000.
     /// </summary>
-    /// <param name="num"></param>
-    /// <returns></returns>
     public static string ThousandsSeperated(this float num)
     {
         return string.Format("{0:n0}", num);
@@ -254,10 +244,8 @@ public static class ExtensionMethods
     #region double
 
     /// <summary>
-    /// Formats an float to a string with thousands seperated eg 21000 becoms 21,000
+    /// Formats an float to a string with thousands seperated eg 21000 becoms 21,000.
     /// </summary>
-    /// <param name="num"></param>
-    /// <returns></returns>
     public static string ThousandsSeperated(this double num)
     {
         return string.Format("{0:n0}", num);
@@ -267,6 +255,9 @@ public static class ExtensionMethods
 
     #region RectTransform
 
+    /// <summary>
+    /// Returns a Rect in screen space of this RectTransform. Useful for UI elements mapped to world objects.
+    /// </summary>
     public static Rect RectTransformToScreenSpace(this RectTransform transform)
     {
         Vector2 size = Vector2.Scale(transform.rect.size, transform.lossyScale);
@@ -274,4 +265,80 @@ public static class ExtensionMethods
     }
 
     #endregion RectTransform
+
+    #region Action
+
+    /// <summary>
+    /// Invoke this action if the action is not null.
+    /// </summary>
+    public static void InvokeSafely(this Action action)
+    {
+        if (action != null)
+        {
+            action();
+        }
+    }
+
+    /// <summary>
+    /// Invoke this action along with a single parameter if the action is not null.
+    /// </summary>
+    public static void InvokeSafely<T>(this Action<T> action, T t)
+    {
+        if (action != null)
+        {
+            action(t);
+        }
+    }
+
+    /// <summary>
+    /// Invoke this action along with two parameters if the action is not null.
+    /// </summary>
+    public static void InvokeSafely<T1, T2>(this Action<T1, T2> action, T1 tOne, T2 tTwo)
+    {
+        if (action != null)
+        {
+            action(tOne, tTwo);
+        }
+    }
+
+    /// <summary>
+    /// Invoke this action along with three parameters if the action is not null.
+    /// </summary>
+    public static void InvokeSafely<T1, T2, T3>(this Action<T1, T2, T3> action, T1 tOne, T2 tTwo, T3 tThree)
+    {
+        if (action != null)
+        {
+            action(tOne, tTwo, tThree);
+        }
+    }
+
+    #endregion Action
+
+    #region List
+
+    /// <summary>
+    /// Returns the first element from this list.
+    /// </summary>
+    public static T First<T>(this List<T> list)
+    {
+        return list[0];
+    }
+
+    /// <summary>
+    /// Returns the last element from this list.
+    /// </summary>
+    public static T Last<T>(this List<T> list)
+    {
+        return list[list.Count - 1];
+    }
+
+    /// <summary>
+    /// Returns a random element from this list.
+    /// </summary>
+    public static T Random<T>(this List<T> list)
+    {
+        return list[UnityEngine.Random.Range(0, list.Count)];
+    }
+
+    #endregion List
 }
