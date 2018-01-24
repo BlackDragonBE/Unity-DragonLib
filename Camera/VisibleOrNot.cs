@@ -10,9 +10,7 @@ using UnityEngine.Events;
 /// </summary>
 public class VisibleOrNot : MonoBehaviour
 {
-    public delegate void VisibilityHandler(bool isVisible, Vector3 position);
-
-    public event VisibilityHandler OnVisibilityChanged;
+    public static event Action<bool, Vector3> OnVisibilityChanged;
 
     [Serializable]
     public class VisibilityChangedEvent : UnityEvent<bool, Vector3> { }
