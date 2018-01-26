@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using Object = UnityEngine.Object;
+using Random = System.Random;
 
 /// <summary>
 /// Contains all of Dragonlib extension methods
 /// </summary>
-public static class ExtensionMethods
+public static partial class ExtensionMethods
 {
     #region Transform
 
@@ -76,6 +77,44 @@ public static class ExtensionMethods
         }
 
         children.ForEach(child => Object.Destroy(child));
+    }
+
+    /// <summary>
+    /// Makes the given GameObjects children of the transform.
+    /// </summary>
+    /// <param name="transform">Parent transform.</param>
+    /// <param name="children">GameObjects to make children.</param>
+    public static void AddChildren(this Transform transform, GameObject[] children)
+    {
+        Array.ForEach(children, child => child.transform.parent = transform);
+    }
+
+    /// <summary>
+    /// Makes the GameObjects of given components children of the transform.
+    /// </summary>
+    /// <param name="transform">Parent transform.</param>
+    /// <param name="children">Components of GameObjects to make children.</param>
+    public static void AddChildren(this Transform transform, Component[] children)
+    {
+        Array.ForEach(children, child => child.transform.parent = transform);
+    }
+
+    /// <summary>
+    /// Sets the position of a transform's children to zero.
+    /// </summary>
+    /// <param name="transform">Parent transform.</param>
+    /// <param name="recursive">Also reset ancestor positions?</param>
+    public static void ResetChildPositions(this Transform transform, bool recursive = false)
+    {
+        foreach (Transform child in transform)
+        {
+            child.position = Vector3.zero;
+
+            if (recursive)
+            {
+                child.ResetChildPositions(recursive);
+            }
+        }
     }
 
     public static Transform SetX(this Transform transform, float x)
@@ -164,6 +203,27 @@ public static class ExtensionMethods
 
         foreach (Renderer renderer in renderers)
             renderer.enabled = enable;
+    }
+
+    /// <summary>
+    /// Gets a component attached to the given GameObject.
+    /// If one isn't found, a new one is attached and returned.
+    /// </summary>
+    /// <param name="gameObject">Game object.</param>
+    /// <returns>Previously or newly attached component.</returns>
+    public static T GetOrAddComponent<T>(this GameObject gameObject) where T : Component
+    {
+        return gameObject.GetComponent<T>() ?? gameObject.AddComponent<T>();
+    }
+
+    /// <summary>
+    /// Checks whether a GameObject has a component of type T attached.
+    /// </summary>
+    /// <param name="gameObject">Game object.</param>
+    /// <returns>True when component is attached.</returns>
+    public static bool HasComponent<T>(this GameObject gameObject) where T : Component
+    {
+        return gameObject.GetComponent<T>() != null;
     }
 
     #endregion GameObject
@@ -340,5 +400,85 @@ public static class ExtensionMethods
         return list[UnityEngine.Random.Range(0, list.Count)];
     }
 
+    /// <summary>
+    /// Shuffle the list in place using the Fisher-Yates method.
+    /// </summary>
+    public static void Shuffle<T>(this IList<T> list)
+    {
+        Random rng = new Random();
+        int n = list.Count;
+        while (n > 1)
+        {
+            n--;
+            int k = rng.Next(n + 1);
+            T value = list[k];
+            list[k] = list[n];
+            list[n] = value;
+        }
+    }
+
     #endregion List
+
+    #region Component
+
+    /// <summary>
+    /// Attaches a component to the given component's GameObject.
+    /// </summary>
+    /// <param name="component">Component.</param>
+    /// <returns>Newly attached component.</returns>
+    public static T AddComponent<T>(this Component component) where T : Component
+    {
+        return component.gameObject.AddComponent<T>();
+    }
+
+    /// <summary>
+    /// Gets a component attached to the given component's GameObject.
+    /// If one isn't found, a new one is attached and returned.
+    /// </summary>
+    /// <param name="component">Component.</param>
+    /// <returns>Previously or newly attached component.</returns>
+    public static T GetOrAddComponent<T>(this Component component) where T : Component
+    {
+        return component.GetComponent<T>() ?? component.AddComponent<T>();
+    }
+
+    /// <summary>
+    /// Checks whether a component's GameObject has a component of type T attached.
+    /// </summary>
+    /// <param name="component">Component.</param>
+    /// <returns>True when component is attached.</returns>
+    public static bool HasComponent<T>(this Component component) where T : Component
+    {
+        return component.GetComponent<T>() != null;
+    }
+
+    #endregion Component
+
+    #region RigidBody
+
+    /// <summary>
+    /// Changes the direction of a rigidbody without changing its speed.
+    /// </summary>
+    /// <param name="rigidbody">Rigidbody.</param>
+    /// <param name="direction">New direction.</param>
+    public static void ChangeDirection(this Rigidbody rigidbody, Vector3 direction)
+    {
+        rigidbody.velocity = direction * rigidbody.velocity.magnitude;
+    }
+
+    public static void Freeze(this Rigidbody rigidBody)
+    {
+        rigidBody.velocity = Vector2.zero;
+        rigidBody.angularVelocity = Vector3.zero;
+        rigidBody.isKinematic = true;
+    }
+
+    public static void Freeze(this Rigidbody2D rigidbody2D)
+    {
+        rigidbody2D.velocity = Vector2.zero;
+        rigidbody2D.angularVelocity = 0;
+        rigidbody2D.isKinematic = true;
+    }
+
+    #endregion RigidBody
 }
