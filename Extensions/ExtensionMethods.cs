@@ -399,6 +399,16 @@ public static partial class ExtensionMethods
     {
         return list[UnityEngine.Random.Range(0, list.Count)];
     }
+	
+	/// <summary>
+	/// Returns a random element from this list and removes the first occurrence of the random element from this list.
+	/// </summary>
+	public static T GetRandomAndRemove<T>(this List<T> list) 
+	{
+		T item = list.Random();
+		list.Remove(item);
+		return item;
+	}
 
     /// <summary>
     /// Shuffle the list in place using the Fisher-Yates method.
