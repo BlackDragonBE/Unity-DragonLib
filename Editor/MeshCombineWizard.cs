@@ -35,6 +35,13 @@ public class MeshCombineWizard : ScriptableWizard
         DisplayWizard<MeshCombineWizard>("Mesh Combine Wizard", "Create Combined Meshes");
     }
 
+    private class MeshCollection
+    {
+        public Material Material;
+        public List<MeshFilter> Meshes = new List<MeshFilter>();
+        public int VertexCount;
+    }
+
     // Called when wizard is opened & when fields get changed
     private void OnWizardUpdate()
     {
@@ -79,6 +86,12 @@ public class MeshCombineWizard : ScriptableWizard
 
             sb.Append("Mesh Filters found: " + meshFilters + "\n");
             sb.Append("Total vertices: " + vertices + "\n");
+
+            if (vertices > 36535)
+            {
+                sb.Append("Vertex count is above 36535, meshes will be split." + "\n");
+            }
+
             sb.Append("Colliders found: " + colliders + "\n");
 
             helpString = sb.ToString();
@@ -86,6 +99,18 @@ public class MeshCombineWizard : ScriptableWizard
     }
 
     private int CalculateTotalVertices(MeshFilter[] meshFilters)
+    {
+        int verts = 0;
+
+        foreach (MeshFilter filter in meshFilters)
+        {
+            verts += filter.sharedMesh.vertexCount;
+        }
+
+        return verts;
+    }
+
+    private int CalculateTotalVertices(List<MeshFilter> meshFilters)
     {
         int verts = 0;
 
@@ -108,7 +133,8 @@ public class MeshCombineWizard : ScriptableWizard
         ParentGameObject.transform.position = Vector3.zero;
 
         MeshFilter[] meshFilters = ParentGameObject.GetComponentsInChildren<MeshFilter>();
-        Dictionary<Material, List<MeshFilter>> materialAndMeshFilterListDictionary = new Dictionary<Material, List<MeshFilter>>();
+        //Dictionary<Material, List<MeshFilter>> materialAndMeshFilterListDictionary = new Dictionary<Material, List<MeshFilter>>();
+        List<MeshCollection> MeshCollections = new List<MeshCollection>();
         List<GameObject> combinedObjects = new List<GameObject>();
         string badMeshNames = "";
 
@@ -122,21 +148,35 @@ public class MeshCombineWizard : ScriptableWizard
                 Debug.LogWarning("A mesh with multiple materials can't be combined. Split up the mesh by its materials if possible or move it to another parent.", meshFilters[i]);
                 badMeshNames += "\n" + meshFilters[i].name;
                 cancelCombine = true;
+                continue;
             }
 
-            if (!cancelCombine)
-            {
-                // Get first material and add it to the material dictionary if it's not in there yet
-                Material material = materials[0];
+            // Get first material and add it to the material dictionary if it's not in there yet
+            Material material = materials[0];
+            bool meshAdded = false;
 
-                if (materialAndMeshFilterListDictionary.ContainsKey(material))
+            foreach (MeshCollection collection in MeshCollections)
+            {
+                if (collection.Material == material && collection.VertexCount + meshFilters[i].sharedMesh.vertexCount < 36535)
                 {
-                    materialAndMeshFilterListDictionary[material].Add(meshFilters[i]);
+                    // Add mesh to collection
+                    // update vert count
+                    collection.Meshes.Add(meshFilters[i]);
+                    collection.VertexCount += meshFilters[i].sharedMesh.vertexCount;
+                    meshAdded = true;
+                    break;
                 }
-                else
-                {
-                    materialAndMeshFilterListDictionary.Add(material, new List<MeshFilter> { meshFilters[i] });
-                }
+            }
+
+            if (!meshAdded)
+            {
+                // create new collection
+                MeshCollection collection = new MeshCollection();
+                collection.Material = material;
+                collection.Meshes = new List<MeshFilter> { meshFilters[i] };
+                collection.VertexCount = meshFilters[i].sharedMesh.vertexCount;
+
+                MeshCollections.Add(collection);
             }
         }
 
@@ -156,10 +196,10 @@ public class MeshCombineWizard : ScriptableWizard
         }
 
         // Combine meshes with same material into a single mesh
-        foreach (KeyValuePair<Material, List<MeshFilter>> entry in materialAndMeshFilterListDictionary)
+        foreach (MeshCollection entry in MeshCollections)
         {
-            List<MeshFilter> meshesWithSameMaterial = entry.Value;
-            string materialName = entry.Key.ToString().Split(' ')[0];
+            List<MeshFilter> meshesWithSameMaterial = entry.Meshes;
+            string materialName = entry.Material.ToString().Split(' ')[0];
 
             CombineInstance[] meshesToCombine = new CombineInstance[meshesWithSameMaterial.Count];
             for (int i = 0; i < meshesWithSameMaterial.Count; i++)
@@ -188,12 +228,12 @@ public class MeshCombineWizard : ScriptableWizard
             AssetDatabase.CreateAsset(combinedMesh, "Assets/" + SavePath + "/COMBINED_" + materialName + ".asset");
 
             // Configure combined mesh
-            string gameObjectName = materialAndMeshFilterListDictionary.Count > 1 ? "COMBINED_" + materialName : "COMBINED_" + ParentGameObject.name;
+            string gameObjectName = MeshCollections.Count > 1 ? "COMBINED_" + materialName : "COMBINED_" + ParentGameObject.name;
             GameObject combinedGameObject = new GameObject(gameObjectName);
             MeshFilter filter = combinedGameObject.AddComponent<MeshFilter>();
             filter.sharedMesh = combinedMesh;
             MeshRenderer renderer = combinedGameObject.AddComponent<MeshRenderer>();
-            renderer.sharedMaterial = entry.Key;
+            renderer.sharedMaterial = entry.Material;
 
             if (MakeStatic)
             {
