@@ -29,4 +29,9 @@ public class ObservableValue<T>
     {
         _value = t;
     }
+
+    public ObservableValue()
+    {
+        _value = default(T);
+    }
 }
