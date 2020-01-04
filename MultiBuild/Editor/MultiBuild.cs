@@ -23,6 +23,11 @@ public class MultiBuild
         //PARAMETERS START
         string gameName = Application.productName; //Name of your game, product name by default
 
+        const bool buildWin = true;
+        const bool buildMac = true;
+        const bool buildLinux = true;
+        const bool buildWebGL = true;
+
         //Scene paths
         string[] scenes = new string[EditorBuildSettings.scenes.Length];
 
@@ -34,14 +39,32 @@ public class MultiBuild
         bool zipFolders = true; //Use 7zip to compress the created folders
         //PARAMETERS END
 
-        // Build Win
-        BuildPipeline.BuildPlayer(scenes, path + "/Win/" + gameName + ".exe", BuildTarget.StandaloneWindows, BuildOptions.None);
+        BuildPlayerOptions buildOptions = new BuildPlayerOptions();
+        buildOptions.scenes = scenes;
+
+        // Windows Build
+        if (buildWin)
+        {
+            buildOptions.target = BuildTarget.StandaloneWindows64;
+            buildOptions.locationPathName = path + "/Win/" + gameName + ".exe";
+            BuildPipeline.BuildPlayer(buildOptions);
+        }
 
         // Build Mac
-        BuildPipeline.BuildPlayer(scenes, path + "/Mac/" + gameName + ".app", BuildTarget.StandaloneOSX, BuildOptions.None);
+        if (buildMac)
+        {
+            buildOptions.target = BuildTarget.StandaloneOSX;
+            buildOptions.locationPathName = path + "/Mac/" + gameName + ".app";
+            BuildPipeline.BuildPlayer(buildOptions);
+        }
 
         // Build Linux
-        BuildPipeline.BuildPlayer(scenes, path + "/Linux/" + gameName + ".x86", BuildTarget.StandaloneLinuxUniversal, BuildOptions.None);
+        if (buildLinux)
+        {
+            buildOptions.target = BuildTarget.StandaloneLinux64;
+            buildOptions.locationPathName = path + "/Linux/" + gameName + ".x86";
+            BuildPipeline.BuildPlayer(buildOptions);
+        }
 
         // 7zip
         if (zipFolders && File.Exists(@"C:\Program Files\7-Zip\7z.exe"))
@@ -49,6 +72,14 @@ public class MultiBuild
             ZipFolder(path + "/Win/", gameName + " Win.zip");
             ZipFolder(path + "/Mac/", gameName + " Mac.zip");
             ZipFolder(path + "/Linux/", gameName + " Linux.zip");
+        }
+
+        // Build WebGL
+        if (buildWebGL)
+        {
+            buildOptions.target = BuildTarget.WebGL;
+            buildOptions.locationPathName = path + "/WebGL/" + gameName;
+            BuildPipeline.BuildPlayer(buildOptions);
         }
     }
 
