@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerPrefsX
+public static class PlayerPrefsX
 {
     public static void SetBool(string name, bool booleanValue)
     {

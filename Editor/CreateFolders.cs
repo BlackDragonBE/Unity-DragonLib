@@ -2,7 +2,7 @@
 using System.IO;
 using UnityEditor;
 
-public class CreateFolders
+public static class CreateFolders
 {
     [MenuItem("Assets/Create Default Folders")]
     private static void CreateAllFolders()

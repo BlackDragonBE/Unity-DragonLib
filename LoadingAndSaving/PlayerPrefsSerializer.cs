@@ -2,7 +2,7 @@
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
-public class PlayerPrefsSerializer
+public static class PlayerPrefsSerializer
 {
     private static BinaryFormatter bf = new BinaryFormatter();
 

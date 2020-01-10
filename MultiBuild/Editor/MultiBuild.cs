@@ -12,7 +12,7 @@ This script will automatically make a Windows, Mac and Linux build in any folder
     - Builds will be made and zipped by 7zip if chosen to do so and 7zip is installed on the system
 */
 
-public class MultiBuild
+public static class MultiBuild
 {
     [MenuItem("Build/Multi Build")]
     public static void DoMultiBuild()

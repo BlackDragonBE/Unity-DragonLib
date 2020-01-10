@@ -28,6 +28,8 @@ public class TakeScreenshotAtStart : MonoBehaviour
             yield return new WaitForSeconds(Random.Range(MinDelayBeforeScreenshot, MaxDelayBeforeScreenshot));
             CreateScreenshot();
         }
+
+        enabled = false;
     }
 
     [ContextMenu("Take Screenshot")]
