@@ -15,6 +15,7 @@ public static class CreateFolders
             "Scripts",
             "Materials",
             "Textures",
+            "Presets",
             "Sprites",
             "Scenes",
             "Models",
